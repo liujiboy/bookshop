@@ -46,13 +46,13 @@
 		</beans:property>
 	</beans:bean>
 	<!--	设置transactionManager-->
-	<beans:bean id="transactionManager"
+	 <beans:bean id="transactionManager"
 		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<beans:property name="sessionFactory" ref="sessionFactory" />
-	</beans:bean>
+	</beans:bean> 
 	<!--	设置事务由annotation配置-->
 	
 	<tx:annotation-driven transaction-manager="transactionManager" />
-	
+
 	
 </beans:beans>

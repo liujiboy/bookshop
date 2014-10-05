@@ -1,11 +1,14 @@
 package cn.edu.cqu.bookshop.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import cn.edu.cqu.bookshop.domains.Category;
@@ -96,5 +99,28 @@ public class CategoryController {
 		mv.addObject("categories",categories);
 		mv.setViewName("/category/listAll");
 		return mv;
+	}
+	@RequestMapping(value="/category/isDuplicate.json")
+	@ResponseBody
+	public Map<String,Boolean> isDuplicate(String code,String name)
+	{
+		Map<String,Boolean> map=new HashMap<String,Boolean>();
+		//检查不能存在相同的code
+		if(categoryCRUD.getByCode(code)!=null)
+		{
+			map.put("codeError", true);
+		}else
+		{
+			map.put("codeError", false);
+		}
+		//检查不能存在相同的name
+		if(categoryCRUD.getByName(name)!=null)
+		{
+			map.put("nameError", true);
+		}else
+		{
+			map.put("nameError", false);
+		}
+		return map;
 	}
 }

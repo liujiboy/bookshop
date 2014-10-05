@@ -7,8 +7,10 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	$("#categoryForm").submit(function(e){
+		
 		var name=$("#name").val();
 		var code=$("#code").val();
+		var valid=true;
 		//检测code
 		if(code.length<=0||code.length>10)
 		{
@@ -20,6 +22,30 @@ $(document).ready(function(){
 		{
 			$("#nameError").html("name不能为空，且长度不能大于100");
 			e.preventDefault();//禁止数据提交到服务器
+		}
+		if(valid)
+		{
+			$.ajax({
+			  	url: "isDuplicate.json",
+			  	data: {
+			    		name: name,
+			    		code: code
+			  	},
+			  	async: false, //设置Ajax请求为同步方式
+			  	success: function( json ) {
+			    		if(json.codeError==true)
+			    		{
+			    			$("#codeError").html("code重复(Ajax验证)");
+			    			e.preventDefault();//禁止数据提交到服务器
+			    		}
+			    		if(json.nameError==true)
+			    		{
+			    			$("#nameError").html("name重复(Ajax验证)");
+			    			e.preventDefault();//禁止数据提交到服务器
+			    		}
+			    		
+			  	}
+			});
 		}
 	});
 });

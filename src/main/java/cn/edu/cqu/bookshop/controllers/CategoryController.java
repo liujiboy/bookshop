@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import cn.edu.cqu.bookshop.domains.Category;
 import cn.edu.cqu.bookshop.json.FormResponse;
@@ -19,30 +18,18 @@ public class CategoryController {
 	@Qualifier("categoryCRUDHibernate")
 	private CategoryCRUD categoryCRUD;
 
-	@RequestMapping(value = "/category/add.ui")
-	public ModelAndView addCategoryUI() {
-		ModelAndView mv = new ModelAndView();
-		mv.setViewName("/category/addCategory");
-		return mv;
-	}
 
-	@RequestMapping(value = "/category/listAll.ui")
-	public ModelAndView listAll() {
-		ModelAndView mv = new ModelAndView();
-		mv.setViewName("/category/listAll");
-		return mv;
-	}
-	@RequestMapping(value = "/category/categories.json")
+	@RequestMapping(value = "/category/listAll.json")
 	@ResponseBody
-	public List<Category> categories()
+	public List<Category> listAll()
 	{
 		List<Category> categories = categoryCRUD.getAll();
 		return categories;
 	}
 
-	@RequestMapping(value = "/category/addCategory.do")
+	@RequestMapping(value = "/category/addCategory.json")
 	@ResponseBody
-	public FormResponse add(String name, String code) {
+	public FormResponse addCategory(String name, String code) {
 		FormResponse response = new FormResponse();
 		try {
 			if (categoryCRUD.getByCode(code) != null) {

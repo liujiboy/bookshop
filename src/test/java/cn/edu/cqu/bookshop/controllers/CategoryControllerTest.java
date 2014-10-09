@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.web.servlet.ModelAndView;
 
 import cn.edu.cqu.bookshop.domains.Category;
 import cn.edu.cqu.bookshop.services.CategoryCRUD;
@@ -42,18 +41,5 @@ public class CategoryControllerTest {
 		deleteAll();
 	}
 
-	@Test
-	public void testAddCategoryUI() {
-		ModelAndView mv=categoryController.addCategoryUI();
-		assertEquals("/category/addCategory",mv.getViewName());
-	}
-
 	
-
-	@Test
-	public void testListAll() {
-		ModelAndView mv=categoryController.listAll();
-		assertEquals("/category/listAll",mv.getViewName());
-	}
-
 }

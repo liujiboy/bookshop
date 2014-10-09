@@ -1,12 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css"
-	href="<%=request.getContextPath()%>/resources/scripts/extjs/packages/ext-theme-neptune/build/resources/ext-theme-neptune-all.css">
+	href="../resources/scripts/extjs/packages/ext-theme-neptune/build/resources/ext-theme-neptune-all.css">
 <script
-	src="<%=request.getContextPath()%>/resources/scripts/extjs/ext-all.js"></script>
+	src="../resources/scripts/extjs/ext-all.js"></script>
 
 <script type="text/javascript">
     //定义表单提交后处理服务器返回数据的函数
@@ -16,7 +15,7 @@
 		var result = action.result;
 		if (result.success) {
 			Ext.MessageBox.alert('成功', result.msg, function() {
-				window.location.href = "listAll.ui";
+				window.location.href = "listAll.html";
 			});
 
 		} else {
@@ -28,7 +27,7 @@
 		var formPanel = Ext.getCmp('myFormPanel');
 		formPanel.el.mask('正在提交数据请等待...', 'x-mask-loading');
 		formPanel.getForm().submit({
-			url : 'addCategory.do',
+			url : 'addCategory.json',
 			success : onSuccessOrFail,
 			failure : onSuccessOrFail
 		});

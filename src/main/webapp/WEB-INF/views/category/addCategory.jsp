@@ -1,63 +1,89 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<script type="text/javascript" src="<%=request.getContextPath()%>/resources/scripts/jquery.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="<%=request.getContextPath()%>/resources/scripts/extjs/packages/ext-theme-neptune/build/resources/ext-theme-neptune-all.css">
+<script
+	src="<%=request.getContextPath()%>/resources/scripts/extjs/ext-all.js"></script>
+
 <script type="text/javascript">
-$(document).ready(function(){
-	$("#categoryForm").submit(function(e){
-		
-		var name=$("#name").val();
-		var code=$("#code").val();
-		var valid=true;
-		//检测code
-		if(code.length<=0||code.length>10)
-		{
-			$("#codeError").html("code不能为空，且长度不能大于10");
-			e.preventDefault();//禁止数据提交到服务器
-		}
-		//检测name
-		if(name.length<=0||name.length>100)
-		{
-			$("#nameError").html("name不能为空，且长度不能大于100");
-			e.preventDefault();//禁止数据提交到服务器
-		}
-		if(valid)
-		{
-			$.ajax({
-			  	url: "isDuplicate.json",
-			  	data: {
-			    		name: name,
-			    		code: code
-			  	},
-			  	async: false, //设置Ajax请求为同步方式
-			  	success: function( json ) {
-			    		if(json.codeError==true)
-			    		{
-			    			$("#codeError").html("code重复(Ajax验证)");
-			    			e.preventDefault();//禁止数据提交到服务器
-			    		}
-			    		if(json.nameError==true)
-			    		{
-			    			$("#nameError").html("name重复(Ajax验证)");
-			    			e.preventDefault();//禁止数据提交到服务器
-			    		}
-			    		
-			  	}
+    //定义表单提交后处理服务器返回数据的函数
+	var onSuccessOrFail = function(form, action) {
+		var formPanel = Ext.getCmp('myFormPanel');
+		formPanel.el.unmask();
+		var result = action.result;
+		if (result.success) {
+			Ext.MessageBox.alert('成功', result.msg, function() {
+				window.location.href = "listAll.ui";
 			});
+
+		} else {
+			Ext.MessageBox.alert('失败', result.msg);
 		}
+	};
+	//定义表单提交按键处理函数
+	var submitHandler = function(btn) {
+		var formPanel = Ext.getCmp('myFormPanel');
+		formPanel.el.mask('正在提交数据请等待...', 'x-mask-loading');
+		formPanel.getForm().submit({
+			url : 'addCategory.do',
+			success : onSuccessOrFail,
+			failure : onSuccessOrFail
+		});
+	};
+	//创建提交按键
+	var submitBtn = Ext.create('Ext.button.Button', {
+		text : '提交',
+		handler : submitHandler,
 	});
-});
+	//创建表单输入框（名称和编码）
+	var fpItems = [ {
+		fieldLabel : '名称:',
+		name : 'name',
+		allowBlank : false,
+		blankText : '名称不能为空',
+		maxLength : 100,
+		maxLengthText : '名称不能超过100'
+	}, {
+		fieldLabel : '编码:',
+		name : 'code',
+		allowBlank : false,
+		blankText : '编码不能为空',
+		maxLength : 10,
+		maxLengthText : '编码不能超过10'
+	} ];
+	//创建表单
+	var fp = Ext.create('Ext.form.Panel', {
+		id : "myFormPanel",
+		width : 400,
+		height : 240,
+		title : '添加Category',
+		frame : true,
+		region : 'center',
+		layout : 'anchor',
+		bodyStyle : 'padding: 6px',
+		labelWidth : 50,
+		defaultType : 'textfield',
+		defaults : {
+			msgTarget : 'under',
+			anchor : '-20'
+		},
+		items : fpItems,
+		buttons : [ submitBtn ]
+	});
+	//页面加载完毕后显示表单
+	Ext.onReady(function() {
+		//表单显示到formDiv
+		fp.render(Ext.get("formDiv"));
+	});
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>添加Category</title>
 </head>
 <body>
-<form id="categoryForm" action="add.do" method="POST">
-<p>name:<input id="name" type="text" name="name" value="${name }"><span id="nameError">${nameError}</span></p>
-<p>code:<input id="code" type="text" name="code" value="${code }"><span id="codeError">${codeError}</span></p>
-<p><input type="submit" value="提交"></p>
-</form>
+    <!-- formDiv位于页面正中（距离顶部100px），用于显示表单 -->
+	<div id="formDiv" style="margin: 100px auto; width: 400px"></div>
 </body>
 </html>
